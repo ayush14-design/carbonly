@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Home, Compass, Utensils, ShoppingBag, Smartphone, Lightbulb, Car, Leaf, Recycle, Plug } from 'lucide-react';
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { Target, Award, Leaf, Bus, Zap, Plus, CheckCircle2 } from 'lucide-react';
@@ -41,7 +41,7 @@ export default function DashboardPage() {
     }
   };
 
-  const handleLogAction = (actionId: string, impact: number, badgeId: string) => {
+  const handleLogAction = (_actionId: string, impact: number, badgeId: string) => {
     logAction(impact);
     unlockBadge(badgeId);
     setRecentAction(`Logged: saved ${impact}kg CO₂e!`);

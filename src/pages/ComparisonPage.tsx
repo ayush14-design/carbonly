@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Car, Bike, Plane, Train, Utensils, Leaf, ShoppingBag, Recycle } from 'lucide-react';
 
 const comparisonData = {
@@ -102,7 +102,7 @@ export default function ComparisonPage() {
                 <div className="flex -space-x-2 text-white">
                   {data.icons.map((icon, i) => (
                     <div key={i} className={`w-8 h-8 rounded-full flex items-center justify-center border-2 border-black/50 ${i===0 ? 'bg-red-400/20 text-red-400' : 'bg-green-400/20 text-green-400'}`}>
-                      {React.cloneElement(icon as React.ReactElement, { size: 16 })}
+                      {React.cloneElement(icon as React.ReactElement<any>, { size: 16 })}
                     </div>
                   ))}
                 </div>

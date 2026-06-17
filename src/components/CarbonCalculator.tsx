@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Zap, Car, Plane, Utensils, Trash2, ArrowRight, Leaf, AlertTriangle, Save } from 'lucide-react';
+import { Zap, Car, Plane, Utensils, Trash2, Leaf, AlertTriangle, Save } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function CarbonCalculator() {
@@ -193,7 +193,7 @@ export default function CarbonCalculator() {
 
               {/* Progress Bar Visualizer */}
               <div className="w-full h-4 glass rounded-full overflow-hidden flex mb-8">
-                {breakdown.map((item, i) => (
+                {breakdown.map((item) => (
                   <motion.div 
                     key={item.label}
                     initial={{ width: 0 }}

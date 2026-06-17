@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { motion } from 'framer-motion';
 import { BookOpen, ThermometerSun, Wind, BatteryCharging, Globe, Target } from 'lucide-react';
 
