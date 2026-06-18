@@ -26,7 +26,7 @@ const sectorData = [
   { name: 'Waste', value: 10, color: '#fb923c' },             // Orange-400
 ];
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: any[]; label?: string }) => {
   if (active && payload && payload.length) {
     return (
       <div className="glass p-4 rounded-xl border border-white/20">

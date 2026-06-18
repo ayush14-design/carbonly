@@ -46,7 +46,7 @@ const comparisonData = {
   }
 };
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: any[]; label?: string }) => {
   if (active && payload && payload.length) {
     return (
       <div className="glass p-4 rounded-xl border border-white/20">
@@ -97,6 +97,7 @@ export default function ComparisonPage() {
               <button
                 key={key}
                 onClick={() => setActiveTab(key as keyof typeof comparisonData)}
+                aria-label={`Select scenario ${data.title}`}
                 className={`glass p-4 rounded-2xl flex items-center gap-4 text-left transition-all duration-300 ${activeTab === key ? 'bg-white/20 border-white/50 scale-[1.02]' : 'hover:bg-white/10'}`}
               >
                 <div className="flex -space-x-2 text-white">

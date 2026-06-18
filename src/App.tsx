@@ -1,20 +1,22 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Globe } from 'lucide-react';
 import Hls from 'hls.js';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 
 import OnboardingWizard from './components/OnboardingWizard';
-import CarbonCalculator from './components/CarbonCalculator';
-import SourcesOfEmissions from './components/SourcesOfEmissions';
-import ReductionTips from './components/ReductionTips';
-import LandingPage from './pages/LandingPage';
-import AuthPage from './pages/AuthPage';
-import ComparisonPage from './pages/ComparisonPage';
-import DataDashboardPage from './pages/DataDashboardPage';
-import DashboardPage from './pages/DashboardPage';
-import KnowledgeHubPage from './pages/KnowledgeHubPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
+
+const CarbonCalculator = lazy(() => import('./components/CarbonCalculator'));
+const SourcesOfEmissions = lazy(() => import('./components/SourcesOfEmissions'));
+const ReductionTips = lazy(() => import('./components/ReductionTips'));
+const LandingPage = lazy(() => import('./pages/LandingPage'));
+const AuthPage = lazy(() => import('./pages/AuthPage'));
+const ComparisonPage = lazy(() => import('./pages/ComparisonPage'));
+const DataDashboardPage = lazy(() => import('./pages/DataDashboardPage'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const KnowledgeHubPage = lazy(() => import('./pages/KnowledgeHubPage'));
+
 
 function BackgroundVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -129,17 +131,19 @@ export default function App() {
           {/* Router Outlet */}
           <div className="flex-1">
             <AnimatePresence mode="wait">
-              <Routes>
-                <Route path="/" element={<LandingPage onStart={() => setShowOnboarding(true)} />} />
-                <Route path="/auth" element={<AuthPage />} />
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/calculator" element={<CarbonCalculator />} />
-                <Route path="/sources" element={<SourcesOfEmissions />} />
-                <Route path="/tips" element={<ReductionTips />} />
-                <Route path="/compare" element={<ComparisonPage />} />
-                <Route path="/global-data" element={<DataDashboardPage />} />
-                <Route path="/knowledge" element={<KnowledgeHubPage />} />
-              </Routes>
+              <Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><div className="w-8 h-8 rounded-full border-2 border-white/20 border-t-white animate-spin"></div></div>}>
+                <Routes>
+                  <Route path="/" element={<LandingPage onStart={() => setShowOnboarding(true)} />} />
+                  <Route path="/auth" element={<AuthPage />} />
+                  <Route path="/dashboard" element={<DashboardPage />} />
+                  <Route path="/calculator" element={<CarbonCalculator />} />
+                  <Route path="/sources" element={<SourcesOfEmissions />} />
+                  <Route path="/tips" element={<ReductionTips />} />
+                  <Route path="/compare" element={<ComparisonPage />} />
+                  <Route path="/global-data" element={<DataDashboardPage />} />
+                  <Route path="/knowledge" element={<KnowledgeHubPage />} />
+                </Routes>
+              </Suspense>
             </AnimatePresence>
           </div>
         </div>

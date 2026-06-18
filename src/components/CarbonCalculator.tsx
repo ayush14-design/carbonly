@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Zap, Car, Plane, Utensils, Trash2, Leaf, AlertTriangle, Save } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { calculateCarbonFootprint } from '../utils/carbonMath';
 
 export default function CarbonCalculator() {
   const [electricity, setElectricity] = useState(300);
@@ -14,41 +15,7 @@ export default function CarbonCalculator() {
   const { isAuthenticated, saveBaseline } = useAuth();
 
   const { total, breakdown, suggestion, safetyStatus } = useMemo(() => {
-    // Math logic (Tons of CO2e per year)
-    const elecTons = (electricity * 12 * 0.4) / 1000;
-    const vehicleTons = (vehicleKm * 52 * 0.2) / 1000;
-    const flightTons = flights * 0.25;
-    
-    let dietTons = 2.5;
-    if (diet === 'Vegan') dietTons = 1.5;
-    if (diet === 'Vegetarian') dietTons = 1.7;
-    if (diet === 'Meat-heavy') dietTons = 3.3;
-
-    let wasteTons = 0.5;
-    if (waste === 'Frequent') wasteTons = 0.3;
-    if (waste === 'Rarely') wasteTons = 0.8;
-
-    const total = elecTons + vehicleTons + flightTons + dietTons + wasteTons;
-    
-    const breakdown = [
-      { label: 'Energy', value: elecTons, color: 'bg-yellow-400' },
-      { label: 'Transport', value: vehicleTons, color: 'bg-blue-400' },
-      { label: 'Flights', value: flightTons, color: 'bg-sky-400' },
-      { label: 'Diet', value: dietTons, color: 'bg-green-400' },
-      { label: 'Waste', value: wasteTons, color: 'bg-orange-400' },
-    ].sort((a, b) => b.value - a.value);
-
-    let suggestion = "Great job! Your footprint is low.";
-    if (breakdown[0].label === 'Diet') suggestion = "Consider swapping out 2 meat meals a week for plant-based alternatives to drastically cut your dietary footprint.";
-    if (breakdown[0].label === 'Energy') suggestion = "Look into smart thermostats or renewable energy suppliers in your area.";
-    if (breakdown[0].label === 'Transport') suggestion = "Could you replace 1 drive a week with public transit or biking?";
-    if (breakdown[0].label === 'Flights') suggestion = "Flights are a massive contributor. Consider offsetting flights or taking trains for regional travel.";
-
-    let safetyStatus = { label: "High Impact", color: "text-red-400 border-red-400/30 bg-red-400/10" };
-    if (total <= 2.5) safetyStatus = { label: "Safe / Sustainable", color: "text-green-400 border-green-400/30 bg-green-400/10" };
-    else if (total <= 6.0) safetyStatus = { label: "Average", color: "text-yellow-400 border-yellow-400/30 bg-yellow-400/10" };
-
-    return { total, breakdown, suggestion, safetyStatus };
+    return calculateCarbonFootprint(electricity, vehicleKm, flights, diet, waste);
   }, [electricity, vehicleKm, flights, diet, waste]);
 
   return (
@@ -80,6 +47,8 @@ export default function CarbonCalculator() {
               </div>
               <p className="text-white/50 text-sm mb-4">Monthly usage (kWh)</p>
               <input 
+                id="electricity-input"
+                aria-label="Electricity usage in kWh"
                 type="range" min="50" max="1500" step="10" 
                 value={electricity} onChange={e => setElectricity(Number(e.target.value))}
                 className="w-full accent-white"
@@ -95,6 +64,8 @@ export default function CarbonCalculator() {
               </div>
               <p className="text-white/50 text-sm mb-4">Weekly travel (km)</p>
               <input 
+                id="vehicle-input"
+                aria-label="Driving distance in kilometers"
                 type="range" min="0" max="1000" step="10" 
                 value={vehicleKm} onChange={e => setVehicleKm(Number(e.target.value))}
                 className="w-full accent-white"
@@ -110,9 +81,9 @@ export default function CarbonCalculator() {
               </div>
               <p className="text-white/50 text-sm mb-4">Short-haul flights per year</p>
               <div className="flex items-center justify-between glass p-2 rounded-xl">
-                <button onClick={() => setFlights(Math.max(0, flights - 1))} className="glass w-10 h-10 flex items-center justify-center font-bold text-white rounded-lg">-</button>
-                <span className="font-mono text-xl font-bold text-white">{flights}</span>
-                <button onClick={() => setFlights(flights + 1)} className="glass w-10 h-10 flex items-center justify-center font-bold text-white rounded-lg">+</button>
+                <button aria-label="Decrease flights" onClick={() => setFlights(Math.max(0, flights - 1))} className="glass w-10 h-10 flex items-center justify-center font-bold text-white rounded-lg">-</button>
+                <span className="font-mono text-xl font-bold text-white" aria-live="polite">{flights}</span>
+                <button aria-label="Increase flights" onClick={() => setFlights(flights + 1)} className="glass w-10 h-10 flex items-center justify-center font-bold text-white rounded-lg">+</button>
               </div>
             </div>
 
@@ -124,6 +95,8 @@ export default function CarbonCalculator() {
               </div>
               <p className="text-white/50 text-sm mb-4">Primary dietary habit</p>
               <select 
+                id="diet-input"
+                aria-label="Primary dietary habit"
                 value={diet} onChange={e => setDiet(e.target.value)}
                 className="glass w-full p-4 rounded-xl text-white outline-none"
               >
