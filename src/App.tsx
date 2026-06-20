@@ -44,6 +44,8 @@ function BackgroundVideo() {
         muted
         loop
         playsInline
+        preload="none"
+        aria-hidden="true"
         className="w-full h-full object-cover opacity-100 grayscale"
       />
     </div>
